@@ -1,14 +1,14 @@
 # CapsLockLed-IME
 
-将 `caps lock` 指示灯变成输入法指示灯。
+将 `caps lock` 指示灯变成中英文指示灯。
 
 ## 用途
 
-1. 先用 [PowerToys](https://github.com/microsoft/PowerToys) 把没什么用的 `caps lock` 映射成 `win + space`。之后就能用 `caps lock` 切换键盘布局（输入法）了。
-2. 后台运行该程序，将输入法状态同步到 `caps lock` 的 LED 指示灯。
+1. 先用 [PowerToys](https://github.com/microsoft/PowerToys) 把没什么用的 `caps lock` 映射成 `win + space`。之后就能用 `caps lock` 切换键盘布局（中英文）了。
+2. 后台运行该程序，将中英文状态同步到 `caps lock` 的 LED 指示灯。
 
-    - 灯亮：当前为中文输入法。
-    - 灯灭：当前为英文输入法。
+    - 灯亮：当前为中文。
+    - 灯灭：当前为英文。
 
 ## 64 位构建安装
 
@@ -18,7 +18,7 @@
 - Visual Studio 2022
 - Windows SDK
 
-PowerShell 中执行
+PowerShell 中进入仓库目录，执行
 
 ``` powershell
 sudo ./install64.ps1

@@ -44,8 +44,15 @@ int main()
     InstallHook(hinstDLL);
 
     MSG msg;
-    while (GetMessage(&msg, NULL, 0, 0))
+    BOOL bRet;
+    while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0)
     {
+        // GetMessage() 返回 -1 表示出错，返回 0 表示 WM_QUIT 消息
+        if (bRet == -1)
+        {
+            return 4;
+        }
+
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }

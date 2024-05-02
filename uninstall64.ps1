@@ -15,7 +15,7 @@ while($true) {
         Write-Output "DLL removed successfully."
         break
     } catch {
-        Write-Warning "Failed to remove DLL. Retrying..."
+        Write-Warning "Removing DLL..."
         Start-Sleep -Seconds 2
     }
 }
