@@ -1,14 +1,19 @@
 #include <Windows.h>
 
-typedef BOOL (*BoolFunc)();
 typedef void (*InstallerFunc)(HINSTANCE hinstDLL);
 
+HANDLE hMutex = NULL;
 HINSTANCE hinstDLL = NULL;
 InstallerFunc InstallHook = NULL;
 InstallerFunc UninstallHook = NULL;
 
-void OnAppExit(void)
+int Dispose(int retCode)
 {
+    if (hMutex)
+    {
+        ReleaseMutex(hMutex);
+    }
+
     if (hinstDLL)
     {
         if (UninstallHook)
@@ -17,20 +22,24 @@ void OnAppExit(void)
         }
         FreeLibrary(hinstDLL);
     }
+
+    return retCode;
 }
 
 int main()
 {
-    atexit(OnAppExit);
+    hMutex = CreateMutex(NULL, FALSE, TEXT("CapsLockLed-IME-Mutex"));
 
-    if (!(hinstDLL = LoadLibrary(TEXT("capslockled-hook.dll"))))
+    // 如果已经有一个实例在运行，则退出
+    if (hMutex == NULL || GetLastError() == ERROR_ALREADY_EXISTS)
     {
-        return 1;
+        return Dispose(1);
     }
 
-    if (((BoolFunc)GetProcAddress(hinstDLL, "IsInstalled"))())
+    // 加载 Hook DLL
+    if (!(hinstDLL = LoadLibrary(TEXT("capslockled-hook.dll"))))
     {
-        return 2;
+        return Dispose(2);
     }
 
     InstallHook = (InstallerFunc)GetProcAddress(hinstDLL, "Install");
@@ -38,7 +47,7 @@ int main()
 
     if (!InstallHook || !UninstallHook)
     {
-        return 3;
+        return Dispose(3);
     }
 
     InstallHook(hinstDLL);
@@ -50,12 +59,12 @@ int main()
         // GetMessage() 返回 -1 表示出错，返回 0 表示 WM_QUIT 消息
         if (bRet == -1)
         {
-            return 4;
+            return Dispose(4);
         }
 
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
 
-    return 0;
+    return Dispose(0);
 }

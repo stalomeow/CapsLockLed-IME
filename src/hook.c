@@ -2,10 +2,10 @@
 #include <ntddkbd.h>
 #include <string.h>
 
-#pragma data_seg("shared_hook_data")
+#pragma data_seg(".shared")
     HHOOK hHook = NULL;
 #pragma data_seg()
-#pragma comment(linker, "/SECTION:shared_hook_data,RWS")
+#pragma comment(linker, "/SECTION:.shared,RWS")
 
 
 BOOL IsChineseKeyboardLayout()
@@ -85,11 +85,6 @@ LRESULT CALLBACK ShellProc(int nCode, WPARAM wParam, LPARAM lParam)
     }
 
     return CallNextHookEx(hHook, nCode, wParam, lParam);
-}
-
-BOOL __declspec(dllexport) IsInstalled()
-{
-    return hHook != NULL;
 }
 
 void __declspec(dllexport) Install(HINSTANCE hinstDLL)
