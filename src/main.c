@@ -11,7 +11,7 @@ int Dispose(int retCode)
 {
     if (hMutex)
     {
-        ReleaseMutex(hMutex);
+        CloseHandle(hMutex);
     }
 
     if (hinstDLL)
